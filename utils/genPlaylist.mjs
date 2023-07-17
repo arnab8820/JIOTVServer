@@ -19,16 +19,38 @@ export default async function genPlaylist(url) {
       18: "Shopping",
       19: "JioDarshan",
     };
+
+    const langMap = {
+      6: "English",
+      1: "Hindi",
+      2: "Marathi",
+      3: "Punjabi",
+      4: "Urdu",
+      5: "Bengali",
+      7: "Malayalam",
+      8: "Tamil",
+      9: "Gujarati",
+      10: "Odia",
+      11: "Telugu",
+      12: "Bhojpuri",
+      13: "Kannada",
+      14: "Assamese",
+      15: "Nepali",
+      16: "French"
+    };
+
     // fs
     let response = await playlist();
     
     const ServerUrl = `http://${url}`;
     for (let resData of response["result"]) {
         const channel_name = resData["channel_name"];
+        const channel_number = resData["channel_id"];
         const channelLogoUrl = "https://jiotv.catchup.cdn.jio.com/dare_images/images/" + resData["logoUrl"];
         const channelCategory = genreMap[resData["channelCategoryId"]];
+        const channelLanguage = langMap[resData["channelLanguageId"]];
         const logoUrl = resData['logoUrl'].split(".")[0];
-        (m3u8PlaylistFile += "#EXTINF:1\x20tvg-logo=\x22" + channelLogoUrl + "\x22\x20group-title=\x22" + channelCategory + "\x22," + channel_name + "\x20\x0a");
+        m3u8PlaylistFile += `#EXTINF:-1 tvg-chno="${channel_number}" tvg-name="${channel_name}" tvg-logo="${channelLogoUrl}" tvg-language="${channelLanguage}" tvg-type="${channelCategory}" group-title="${channelCategory}", ${channel_name}\x20\x0a`;
         (m3u8PlaylistFile += ServerUrl + "/getm3u8/" + resData["channel_id"] + "/master.m3u8" + "\x0a");
     }
       m3u8PlaylistFile += `#EXTINF:-1 tvg-logo="http://jiotv.catchup.cdn.jio.com/dare_images/images/Sony_HD.png" group-title="Sony Liv",SONY HD
