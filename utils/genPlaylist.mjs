@@ -3,7 +3,7 @@ import playlist from './getJsonPlaylist.mjs';
 export default async function genPlaylist(url) {
   try {
     
-    let m3u8PlaylistFile = "#EXTM3U  x-tvg-url=\"https://github.com/mitthu786/tvepg/raw/main/epg.xml.gz\"\x0a";
+    let m3u8PlaylistFile = "#EXTM3U  x-tvg-url=\"https://3o77.short.gy/epg.xml.gz\"\x0a";
     const genreMap = {
       8: "Sports",
       5: "Entertainment",
@@ -50,7 +50,11 @@ export default async function genPlaylist(url) {
         const channelCategory = genreMap[resData["channelCategoryId"]];
         const channelLanguage = langMap[resData["channelLanguageId"]];
         const logoUrl = resData['logoUrl'].split(".")[0];
-        m3u8PlaylistFile += `#EXTINF:-1 tvg-chno="${channel_number}" tvg-name="${channel_name}" tvg-logo="${channelLogoUrl}" tvg-language="${channelLanguage}" tvg-type="${channelCategory}" group-title="${channelCategory}" catchup="vod" catchup-source="${ServerUrl}/catchup/getm3u8/${start}/${end}/${channel_number}/index.m3u8" catchup-days="7", ${channel_name}\x20\x0a`;
+        m3u8PlaylistFile += `#EXTINF:-1 tvg-chno="${channel_number}" tvg-name="${channel_name}" tvg-logo="${channelLogoUrl}" tvg-language="${channelLanguage}" tvg-type="${channelCategory}" group-title="${channelCategory}"`;
+        if (resData["isCatchupAvailable"]) {
+          m3u8PlaylistFile += ` catchup="vod" catchup-source="${ServerUrl}/catchup/getm3u8/\${start}/\${end}/${channel_number}/index.m3u8" catchup-days="7"`;
+        }
+        m3u8PlaylistFile += `, ${channel_name}\x20\x0a`;
         (m3u8PlaylistFile += ServerUrl + "/getm3u8/" + resData["channel_id"] + "/master.m3u8" + "\x0a");
     }
       m3u8PlaylistFile += `#EXTINF:-1 tvg-logo="http://jiotv.catchup.cdn.jio.com/dare_images/images/Sony_HD.png" group-title="Sony Liv",SONY HD
