@@ -50,7 +50,7 @@ export default async function genPlaylist(url) {
         const channelCategory = genreMap[resData["channelCategoryId"]];
         const channelLanguage = langMap[resData["channelLanguageId"]];
         const logoUrl = resData['logoUrl'].split(".")[0];
-        m3u8PlaylistFile += `#EXTINF:-1 tvg-chno="${channel_number}" tvg-name="${channel_name}" tvg-logo="${channelLogoUrl}" tvg-language="${channelLanguage}" tvg-type="${channelCategory}" group-title="${channelCategory}", ${channel_name}\x20\x0a`;
+        m3u8PlaylistFile += `#EXTINF:-1 tvg-chno="${channel_number}" tvg-name="${channel_name}" tvg-logo="${channelLogoUrl}" tvg-language="${channelLanguage}" tvg-type="${channelCategory}" group-title="${channelCategory}" catchup="vod" catchup-source="${ServerUrl}/catchup/getm3u8/${start}/${end}/${channel_number}/index.m3u8" catchup-days="7", ${channel_name}\x20\x0a`;
         (m3u8PlaylistFile += ServerUrl + "/getm3u8/" + resData["channel_id"] + "/master.m3u8" + "\x0a");
     }
       m3u8PlaylistFile += `#EXTINF:-1 tvg-logo="http://jiotv.catchup.cdn.jio.com/dare_images/images/Sony_HD.png" group-title="Sony Liv",SONY HD
